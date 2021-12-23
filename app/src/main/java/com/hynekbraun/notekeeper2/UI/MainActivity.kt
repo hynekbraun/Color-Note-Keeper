@@ -3,6 +3,7 @@ package com.hynekbraun.notekeeper2.UI
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hynekbraun.notekeeper2.R
@@ -12,7 +13,7 @@ import com.hynekbraun.notekeeper2.Util.NoteEntity
 import com.hynekbraun.notekeeper2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
-//    ,androidx.appcompat.widget.SearchView.OnQueryTextListener
+    ,androidx.appcompat.widget.SearchView.OnQueryTextListener
 {
 
     private lateinit var _binding: ActivityMainBinding
@@ -45,42 +46,43 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
 
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.toolbar_searchview, menu)
-//
-//        val search = menu?.findItem(R.id.mainSearchBar)
-//        val searchView = search?.actionView as androidx.appcompat.widget.SearchView
-//        searchView?.isSubmitButtonEnabled = true
-//        searchView?.setOnQueryTextListener(this)
-//        return true
-//    }
-//
-//    override fun onQueryTextSubmit(query: String?): Boolean {
-//        if (query != null) {
-//            searchDatabase(query)
-//        }
-//        return true
-//    }
-//
-//    override fun onQueryTextChange(query: String?): Boolean {
-//        if (query != null) {
-//            searchDatabase(query)
-//        }
-//        return true
-//
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_searchview, menu)
 
-//    private fun searchDatabase(query: String) {
-//        val searchQuery = "%$query%"
-//
-//        viewModel.searchNote(searchQuery).observe(this, {
-//            it.let {
-//                adapter.getNotes(it as ArrayList<NoteEntity>)
-//
-//            }
-//
-//        })
-//    }
+        val search = menu?.findItem(R.id.mainSearchBar)
+        val searchView = search?.actionView as androidx.appcompat.widget.SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+        return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (query != null) {
+            searchDatabase(query)
+        }
+        return true
+
+    }
+
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+        viewModel.searchNote(searchQuery).observe(this, {
+            it.let {
+                adapter.getNotes(it as ArrayList<NoteEntity>)
+
+            }
+
+        })
+    }
 
 
 

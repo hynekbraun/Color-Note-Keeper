@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/activity_note_update.xml" value="0.1" />
         <entry key="app/src/main/res/layout/dialog_pick_color.xml" value="0.1" />
         <entry key="app/src/main/res/layout/rv_item.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/toolbar_searchview.xml" value="0.1" />
       </map>
     </option>
   </component>

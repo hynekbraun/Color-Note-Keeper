@@ -22,7 +22,7 @@ interface NotesDao {
     @Query("SELECT * FROM notes_table ORDER BY date DESC")
     fun readAllNotes(): LiveData<List<NoteEntity>>
 
-//    @Query("SELECT * FROM notes_table WHERE header LIKE :searchQuery")
-//    fun searchNote(searchQuery: String): LiveData<List<NoteEntity>>
+    @Query("SELECT * FROM notes_table WHERE header LIKE :searchQuery")
+    fun searchNote(searchQuery: String): LiveData<List<NoteEntity>>
 
 }

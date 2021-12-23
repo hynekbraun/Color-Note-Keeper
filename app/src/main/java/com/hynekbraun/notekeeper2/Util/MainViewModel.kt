@@ -40,8 +40,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             repository.deleteAllNotes()
         }
     }
-//    fun searchNote(searchQuery: String): LiveData<List<NoteEntity>> {
-//        return repository.searchNote(searchQuery)
-//    }
+    fun searchNote(searchQuery: String): LiveData<List<NoteEntity>> {
+        return repository.searchNote(searchQuery)
+    }
 
 }
