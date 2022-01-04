@@ -30,12 +30,9 @@ abstract class NotesDatabase : RoomDatabase() {
                     "item_database"
                 ).fallbackToDestructiveMigration()
                     .build()
-
-
                 INSTANCE = instance
                 return instance
             }
         }
     }
-
 }

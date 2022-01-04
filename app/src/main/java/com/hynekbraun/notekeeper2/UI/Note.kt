@@ -1,6 +1,9 @@
 package com.hynekbraun.notekeeper2.UI
 
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Note : AppCompatActivity() {
-
+    private val currentDate = getCurrentDateTime()
     private lateinit var _binding: ActivityNoteBinding
     private val binding get() = _binding
     private lateinit var viewModel: MainViewModel
@@ -24,21 +27,23 @@ class Note : AppCompatActivity() {
         _binding = ActivityNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val currentDate = getCurrentDateTime()
         binding.tvNoteDate.text = getFormatedDate(currentDate)
 
+        setUpButtons()
+    }
+
+    private fun setUpButtons() {
         binding.ivNoteSave.setOnClickListener {
             val header = binding.etNoteHeader.text.toString()
             val description = binding.etNoteDescription.text.toString()
             val color = (binding.tvNoteColorChange.background as ColorDrawable).color
+            val isDone = binding.cbNoteIsDone.isChecked
             if (header.isEmpty() || description.isEmpty()) {
                 Toast.makeText(this, "Please fill in the header and note", Toast.LENGTH_LONG).show()
             } else {
-                viewModel.addNote(NoteEntity(0, header, description, currentDate, color, false))
+                viewModel.addNote(NoteEntity(0, header, description, currentDate, color, isDone))
                 Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent)
-//                finish()
+                goToMainActivity()
             }
         }
         binding.tvNoteColorChange.setOnClickListener {
@@ -67,9 +72,7 @@ class Note : AppCompatActivity() {
                 updateColorDialog.dismiss()
             }
             updateColorDialog.show()
-
         }
-
     }
 
     private fun getFormatedDate(date: Date): String {
@@ -77,11 +80,56 @@ class Note : AppCompatActivity() {
         return formatter.format(date)
     }
 
-
     private fun getCurrentDateTime(): Date {
         return Calendar.getInstance().time
-
     }
 
+    private fun showDialog() {
+        lateinit var dialog: AlertDialog
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Do you want to save current note?")
+        val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show()
+                    viewModel.addNote(
+                        NoteEntity(
+                            0,
+                            binding.etNoteHeader.text.toString(),
+                            binding.etNoteDescription.text.toString(),
+                            getCurrentDateTime(),
+                            (binding.tvNoteColorChange.background as ColorDrawable).color,
+                            false
+                        )
+                    )
+                    goToMainActivity()
+                }
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    goToMainActivity()
+                }
+            }
+        }
+        builder.setPositiveButton("YES", dialogClickListener)
 
+        builder.setNegativeButton("NO", dialogClickListener)
+
+        builder.setNeutralButton("CANCEL", dialogClickListener)
+
+        dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onBackPressed() {
+        if (binding.etNoteHeader.text.isNotEmpty() && binding.etNoteDescription.text.isNotEmpty()) {
+            showDialog()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }

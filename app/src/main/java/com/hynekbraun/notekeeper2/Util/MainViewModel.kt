@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
     val allNotes: LiveData<List<NoteEntity>>
-
     private val repository: NotesRepository
 
     init{

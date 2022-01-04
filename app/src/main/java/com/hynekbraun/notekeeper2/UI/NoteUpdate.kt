@@ -15,9 +15,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NoteUpdate : AppCompatActivity() {
-
     private lateinit var _binding: ActivityNoteUpdateBinding
-    val binding get() = _binding
+    private val binding get() = _binding
     lateinit var viewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,65 +24,69 @@ class NoteUpdate : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        val currentNote: NoteEntity = fetchExtras()
 
-        setUpValues(currentNote)
+        setUpValues(fetchExtras())
+        setUpButtons()
+    }
 
+    private fun setUpButtons() {
         binding.ivNoteUpdateSave.setOnClickListener {
-            val header = binding.etNoteUpdateHeader.text.toString()
-            val description = binding.etNoteUpdateDescription.text.toString()
-            val date = getCurrentDateTime()
-            val color = (binding.tvNoteUdpateColorChange.background as ColorDrawable).color
+            val note = readvalues()
 
 
-            if (header.isEmpty() || description.isEmpty()) {
+            if (note.header.isEmpty() || note.description.isEmpty()) {
                 Toast.makeText(this, "Please fill in the header and note", Toast.LENGTH_LONG).show()
             } else {
-                val updatedNote: NoteEntity =
-                    NoteEntity(currentNote.id, header, description, date, color, currentNote.isDone)
-                viewModel.updateNote(updatedNote)
+                viewModel.updateNote(note)
                 Toast.makeText(this, "Note updated", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.tvNoteUdpateColorChange.setOnClickListener {
+        binding.tvNoteUpdateColorChange.setOnClickListener {
             val updateColorDialog = Dialog(this, R.style.Theme_Dialog)
             updateColorDialog.setCancelable(true)
             updateColorDialog.setContentView(R.layout.dialog_pick_color)
 
             updateColorDialog.findViewById<View>(R.id.color_pick_blue).setOnClickListener {
-                binding.tvNoteUdpateColorChange.setBackgroundColor(getColor(R.color.background_blue))
+                binding.tvNoteUpdateColorChange.setBackgroundColor(getColor(R.color.background_blue))
                 binding.llNoteUpdateHeaderBackground.setBackgroundColor(getColor(R.color.background_blue))
                 updateColorDialog.dismiss()
             }
             updateColorDialog.findViewById<View>(R.id.color_pick_red).setOnClickListener {
-                binding.tvNoteUdpateColorChange.setBackgroundColor(getColor(R.color.background_red))
+                binding.tvNoteUpdateColorChange.setBackgroundColor(getColor(R.color.background_red))
                 binding.llNoteUpdateHeaderBackground.setBackgroundColor(getColor(R.color.background_red))
                 updateColorDialog.dismiss()
             }
             updateColorDialog.findViewById<View>(R.id.color_pick_yellow).setOnClickListener {
-                binding.tvNoteUdpateColorChange.setBackgroundColor(getColor(R.color.background_yellow))
+                binding.tvNoteUpdateColorChange.setBackgroundColor(getColor(R.color.background_yellow))
                 binding.llNoteUpdateHeaderBackground.setBackgroundColor(getColor(R.color.background_yellow))
                 updateColorDialog.dismiss()
             }
             updateColorDialog.findViewById<View>(R.id.color_pick_green).setOnClickListener {
-                binding.tvNoteUdpateColorChange.setBackgroundColor(getColor(R.color.background_green))
+                binding.tvNoteUpdateColorChange.setBackgroundColor(getColor(R.color.background_green))
                 binding.llNoteUpdateHeaderBackground.setBackgroundColor(getColor(R.color.background_green))
                 updateColorDialog.dismiss()
             }
             updateColorDialog.show()
-
         }
+    }
 
+    private fun readvalues(): NoteEntity {
+        val header = binding.etNoteUpdateHeader.text.toString()
+        val description = binding.etNoteUpdateDescription.text.toString()
+        val date = getCurrentDateTime()
+        val color = (binding.tvNoteUpdateColorChange.background as ColorDrawable).color
+        val isDone = binding.cbNoteUpdateIsDone.isChecked
+        return NoteEntity(fetchExtras().id, header, description, date, color, isDone)
     }
 
     private fun setUpValues(currentNote: NoteEntity) {
         binding.llNoteUpdateHeaderBackground.setBackgroundColor(currentNote.color)
-        binding.tvNoteUdpateColorChange.setBackgroundColor(currentNote.color)
+        binding.tvNoteUpdateColorChange.setBackgroundColor(currentNote.color)
         binding.etNoteUpdateHeader.setText(currentNote.header)
         binding.etNoteUpdateDescription.setText(currentNote.description)
         binding.tvNoteUpdateDate.text = getCurrentFormatedDate(getCurrentDateTime())
-
+        binding.cbNoteUpdateIsDone.isChecked = currentNote.isDone
     }
 
     private fun fetchExtras(): NoteEntity {
@@ -99,9 +102,9 @@ class NoteUpdate : AppCompatActivity() {
         val date = Calendar.getInstance().time
         return date
     }
-    private fun getCurrentFormatedDate(date: Date): String{
+
+    private fun getCurrentFormatedDate(date: Date): String {
         val formatter = SimpleDateFormat("MM-dd HH:mm")
         return formatter.format(date)
     }
-
 }

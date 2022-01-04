@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="background_note_basic">#EDD98E</color>
+    <color name="background_note_basic_dark">#40A8913F</color>
     <color name="background_blue">#B4104BA3</color>
     <color name="background_yellow">#DFBE1B</color>
     <color name="background_red">#F3ED1B2C</color>

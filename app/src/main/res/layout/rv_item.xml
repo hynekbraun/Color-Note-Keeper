@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,21 +27,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/tv_rvItem_header"
-        app:layout_constraintEnd_toStartOf="@id/cb_rvItem"
+        app:layout_constraintEnd_toStartOf="@id/iv_rvItem_isDone"
         tools:text="12/24" />
 
-    <CheckBox
-        android:id="@+id/cb_rvItem"
+    <ImageView
+        android:id="@+id/iv_rvItem_isDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checked="false"
-        android:clickable="true"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_rvItem_header"
-        app:layout_constraintBottom_toBottomOf="@id/tv_rvItem_header"
-
-        />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/ic_baseline_done_24"
+        android:background="@drawable/round_shape"
+        android:contentDescription="@string/isdone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,9 +12,8 @@ import com.hynekbraun.notekeeper2.Util.NoteAdapter
 import com.hynekbraun.notekeeper2.Util.NoteEntity
 import com.hynekbraun.notekeeper2.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
-    ,androidx.appcompat.widget.SearchView.OnQueryTextListener
-{
+class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener,
+    androidx.appcompat.widget.SearchView.OnQueryTextListener {
 
     private lateinit var _binding: ActivityMainBinding
     private val binding get() = _binding
@@ -31,24 +30,22 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
         binding.rvMain.layoutManager = LinearLayoutManager(this)
         binding.rvMain.adapter = adapter
 
+        setUpUI()
 
-        viewModel.allNotes.observe(this){
+    }
+
+    private fun setUpUI() {
+        viewModel.allNotes.observe(this) {
             adapter.getNotes(it as ArrayList<NoteEntity>)
-
         }
-
         binding.fbMain.setOnClickListener {
             val intent = Intent(this, Note::class.java)
             startActivity(intent)
-
         }
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_searchview, menu)
-
         val search = menu?.findItem(R.id.mainSearchBar)
         val searchView = search?.actionView as androidx.appcompat.widget.SearchView
         searchView?.isSubmitButtonEnabled = true
@@ -68,9 +65,7 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
             searchDatabase(query)
         }
         return true
-
     }
-
 
     private fun searchDatabase(query: String) {
         val searchQuery = "%$query%"
@@ -78,14 +73,9 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
         viewModel.searchNote(searchQuery).observe(this, {
             it.let {
                 adapter.getNotes(it as ArrayList<NoteEntity>)
-
             }
-
         })
     }
-
-
-
 
     override fun onItemClick(position: Int) {
         val currentItem = viewModel.allNotes.value!![position]
@@ -97,6 +87,5 @@ class MainActivity : AppCompatActivity(), NoteAdapter.OnItemClickListener
         intent2.putExtra("date", currentItem.date)
         intent2.putExtra("isDone", currentItem.isDone)
         startActivity(intent2)
-
     }
 }
