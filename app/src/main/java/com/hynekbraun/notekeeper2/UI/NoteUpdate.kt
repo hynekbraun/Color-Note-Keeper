@@ -1,6 +1,9 @@
 package com.hynekbraun.notekeeper2.UI
 
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -42,6 +45,31 @@ class NoteUpdate : AppCompatActivity() {
             }
         }
 
+        binding.noteUpdateIvDelete.setOnClickListener {
+            lateinit var dialog: AlertDialog
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Do you want to delete current note?")
+            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                when (which) {
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        viewModel.deleteNote(readvalues())
+                        goToMainActivity()
+                    }
+                    DialogInterface.BUTTON_NEGATIVE -> {
+                        dialog.dismiss()
+                    }
+                }
+            }
+            builder.setPositiveButton("YES", dialogClickListener)
+
+            builder.setNegativeButton("NO", dialogClickListener)
+
+            builder.setNeutralButton("CANCEL", dialogClickListener)
+
+            dialog = builder.create()
+            dialog.show()
+        }
+
         binding.tvNoteUpdateColorChange.setOnClickListener {
             val updateColorDialog = Dialog(this, R.style.Theme_Dialog)
             updateColorDialog.setCancelable(true)
@@ -69,6 +97,12 @@ class NoteUpdate : AppCompatActivity() {
             }
             updateColorDialog.show()
         }
+    }
+
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun readvalues(): NoteEntity {

@@ -2,4 +2,8 @@
     <string name="app_name">Note Keeper 2</string>
     <string name="add">Add</string>
     <string name="isdone">isDone</string>
+    <string name="note_header">Note header</string>
+    <string name="save">save</string>
+    <string name="write_your_note_here">Write your note here</string>
+    <string name="delete">delete</string>
 </resources>
